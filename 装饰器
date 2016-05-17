@@ -1,0 +1,85 @@
+首先：
+     def deco(func):
+        print("before myfunc() called.")
+        func()
+        print("  after myfunc() called.")
+        return func
+
+     @deco
+     def myfunc():
+        print(" myfunc() called.")
+
+     myfunc()
+
+
+
+使用语法糖@来装饰函数，相当于“myfunc = deco(myfunc)”
+将deco封装后赋值给myfunc变量，此时输入myfunc，就相当于deco(myfunc)，函数被执行
+输出：
+     before myfunc() called.
+     myfunc() called.
+     after myfunc() called.
+
+而输入myfunc()，则相当于deco(myfunc)()
+即执行deco(myfunc)后，可能返回一个函数名，于是该语句变成funtion()，funtion为deco(myfunc)返回的函数名
+所以上面的例子将会输出结果：
+    before myfunc() called.
+    myfunc() called.
+    after myfunc() called.
+    myfunc() called.
+可以看到deco(myfunc)执行后，返回func函数名，于是执行语句func()，即最初传入装饰器函数的原始函数myfunc
+需要注意myfunc函数名因为被装饰，所以如果不是在装饰器函数中直接返回原始函数，在外面myfunc变量即deco(myfunc)
+
+然而，将代码增添一行myfunc()，发现第二个myfunc()已然恢复成原函数，myfunc仅代表一个函数名，而非经过装饰器封装的函数
+原理：
+    @相当于语句myfunc = deco(myfunc)，此时myfunc指向一个封装好的函数，不会触发函数里面的语句
+    而当单纯输入一个变量名myfunc，就相当于一条语句deco(myfunc)，会执行该函数内的语句
+    语句：
+            print("before myfunc() called.")
+            func()
+            print("  after myfunc() called.")
+    函数内语句被执行完成后，返回了func，即原函数函数名，此时回头看语句myfunc = deco(myfunc)
+    因为deco(myfunc)被触发，且执行完毕，并且返回了func(原函数函数名)，此时myfunc变量已经不再指向封装函数deco(myfunc)
+    而此时的myfunc被赋值为func(原函数函数名)，所以当执行下一条语句myfunc()时，实际上就在执行原函数
+
+例如：
+     def deco(func):
+        print("before myfunc() called.")
+        func()
+        print("  after myfunc() called.")
+        return "myfuncmyfunc变量已改变"
+
+     @deco
+     def myfunc():
+        print(" myfunc() called.")
+
+     myfunc
+     print myfunc
+
+输出结果为：
+     before myfunc() called.
+     myfunc() called.
+     after myfunc() called.
+     myfuncmyfunc变量已改变
+
+如何避免这种情况？
+一般使用使用内嵌包装函数来确保每次新函数都被调用
+
+     def deco(func):
+         def _deco():
+             print("before myfunc() called.")
+             func()
+             print("  after myfunc() called.")
+        # 不需要返回func，实际上应返回原函数的返回值
+     return _deco
+
+ 
+     @deco
+     def myfunc():
+         print(" myfunc() called.")
+ 
+     myfunc()
+     myfunc()
+
+myfunc指向的函数封包解开后，返回_deco函数名，此时myfunc被赋值为_deco
+所以之后执行myfunc()都相当于执行_deco()
