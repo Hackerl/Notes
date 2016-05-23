@@ -1,0 +1,28 @@
+字符串也可以迭代，使用【】下标和切片
+dic可以使用【】引索
+*将list还原成数字，**将dic还原成x=y
+返回闭包不执行，变量如果变化，结果就会变化
+如果一定要引用循环变量，方法是再创建一个函数，用该函数的参数绑定循环变量当前的值
+a,b,c=[1,2,3] 分别赋值 a=1
+@log 相当于 now = log('execute')(now) now不是字符串
+代码封装:公开函数，而把内部逻辑用private函数隐藏 如return _private_()
+类使用装饰器@property，将方法变属性，属性名即函数名，定义中变量名加下划线_   @property    def birth(self):   return self._birth
+斐波那契数列:self.a, self.b = self.b, self.a + self.b
+[n.stop:n.start] 属于切片类型 slice
+__getattr__ 当使用点号获取实例属性时，如果属性不存在就自动调用__getattr__方法
+__setattr__当设置类实例属性时自动调用，如j.name=5 就会调用__setattr__方法  self.[name]=5
+os.getcwd()：获取当前工作目录    os.sep 根据你所处的平台，自动地采用相应的分割符
+os.walk 方便很多了.这个方法返回的是一个三元tupple(dirpath, dirnames, filenames)的集合
+dirpath是一个string，代表目录的路径,dirnames是一个list，包含了dirpath下所有子目录的名字
+filenames是一个list，包含了非目录文件的名字.这些名字不包含路径信息,如果需要得到全路径,需要使用 os.path.join(dirpath, name). 
+'.'表示当前目录
+os.listdir(os.getcwd())  获得当前目录中的内容，返回list 但不能获取子目录，所以可以使用os.walk迭代
+os.path.isdir(x) 判断是否为目录 os.path.isfile()判断是否为文件
+__slots__定义类只能拥有的属性
+QueueManager.register设置接口信息，callable参数关联了Queue对象
+manager = QueueManager(address=('', 5000), authkey=b'abc') 设置地址，manager为接口名
+(-len(s)) % 4 负数求余数 可得整数余数的差值
+在bytes中，无法显示为ASCII字符的字节，用\x##显示
+任何对象调用方法都会把把自己作为该方法中的第一个参数，传递到函数中
+set()创建无序不重复集合，需传入一个合集，set("hello")将会得到set(['h','e','l','l','o'])
+set(["hello"])则得到set(["hello"])

