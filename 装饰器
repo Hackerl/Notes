@@ -11,7 +11,6 @@
 
      myfunc()
 
-
 使用语法糖@来装饰函数，相当于“myfunc = deco(myfunc)”
 将deco封装后赋值给myfunc变量，此时输入myfunc，就相当于deco(myfunc)，函数被执行
 输出：
