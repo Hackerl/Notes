@@ -8,7 +8,6 @@ iptables -A FORWARD -i wlan1 -o wlan0 -j ACCEPT
 iptables -A FORWARD -p tcp --syn -s 10.0.0.0/24 -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu 
 #iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 10000
 sleep 3
-
 ifconfig wlan1 down &&
 iwconfig wlan1 mode monitor &&
 ifconfig wlan1 up &&
