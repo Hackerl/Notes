@@ -1,6 +1,5 @@
 OpenVPN
 中国移动免流代码
-
 http-proxy-retry
 http-proxy 10.0.0.172 80
 http-proxy-option EXT1 "POST http://rd.go.10086.cn"
