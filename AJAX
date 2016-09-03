@@ -1,0 +1,49 @@
+javascript异步网络请求
+
+基础知识
+function success(text) {
+    var textarea = document.getElementById('test-response-text');
+    textarea.value = text;
+}
+
+function fail(code) {
+    var textarea = document.getElementById('test-response-text');
+    textarea.value = 'Error code: ' + code;
+}
+
+var request = new XMLHttpRequest(); // 新建XMLHttpRequest对象
+//  IE浏览器：var request = new ActiveXObject('Microsoft.XMLHTTP'); // 新建Microsoft.XMLHTTP对象
+
+request.onreadystatechange = function () { // 状态发生变化时，函数被回调
+    if (request.readyState === 4) { // 成功完成
+        // 判断响应结果:
+        if (request.status === 200) {
+            // 成功，通过responseText拿到响应的文本:
+            return success(request.responseText);
+        } else {
+            // 失败，根据响应码判断失败原因:
+            return fail(request.status);
+        }
+    } else {
+        // HTTP请求还在继续...
+    }
+}
+
+// 发送请求:
+request.open('GET', '/api/categories');
+request.send();
+
+alert('请求已发送，请等待响应...');
+
+跨越请求
+普通ajax只能在本域进行请求，如果要跨越请求
+
+1.在本地服务器搭建代理转发
+2.因为加载外域的js没有限制，可以设置一个按钮，绑定加载<script>标签的函数，外域返回的js也有格式限制，需要返回  函数名(数据)--foo(data)，函数foo需要在本地定义，加载js后就会执行foo处理数据
+
+CORS
+对外域进行GET请求时，浏览器收到响应后，首先检查Access-Control-Allow-Origin是否包含本域
+如果是，则此次跨域请求成功，如果不是，则请求失败，JavaScript将无法获取到响应的任何数据
+对于PUT、DELETE以及其他类型如application/json的POST请求
+在发送AJAX请求之前，浏览器会先发送一个OPTIONS请求（称为preflighted请求）到这个URL上，询问目标服务器是否接受
+浏览器确认服务器响应的Access-Control-Allow-Methods头确实包含将要发送的AJAX请求的Method，才会继续发送AJAX，否则，抛出一个错误。
