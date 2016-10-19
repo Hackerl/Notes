@@ -11,9 +11,9 @@ apk中包含图片视频等资料，最重要的是一个dex文件
       //使用adb logcat -v time *:E | grep "app名"命令，可以输出指定app的日志
 
   注入：
-  dex--->smail：使用apktool，可以解包apk，生成smail源代码
-  //smail源代码不会出现丢失杂乱，如果需要注入代码，只能修改smail代码，然后编译
-  smail--->apk：使用apktool，重新打包后，需要进行签名才可安装，使用zipsigner
+      dex--->smail：使用apktool，可以解包apk，生成smail源代码
+      //smail源代码不会出现丢失杂乱，如果需要注入代码，只能修改smail代码，然后编译
+      smail--->apk：使用apktool，重新打包后，需要进行签名才可安装，使用zipsigner
 
   调试：
       已经修改完成，不一定运行无误，可能由于源代码设置了保护措施，或注入代码时的错误，使用adb logcat查看运行时日志，出现错误后，检查错误原因，修改代码
