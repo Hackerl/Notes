@@ -5,7 +5,7 @@ import urllib2
 import json
 
 def get_ip_information(ip):
-    url='http://api.map.baidu.com/highacciploc/v1?qcip='+ip+'&qterm=pc&ak=密钥&coord=bd09ll&extensions=3'
+    url='http://api.map.baidu.com/highacciploc/v1?qcip='+ip+'&qterm=pc&ak=你的密钥&coord=bd09ll&extensions=3'
     poiss=''
     request = urllib2.Request(url)
     page = urllib2.urlopen(request, timeout=10)
