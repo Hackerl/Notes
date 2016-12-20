@@ -1,0 +1,37 @@
+批量替换字符串  sed -i "s/Metasploit3/MetasploitModule/g" `grep Metasploit3 -rl ~/Downloads/XSSF`
+wget代理      wget -e "http_proxy=http://127.0.0.1:1080/" http://www.google.com
+             wget -e "http_proxy=http://47.90.48.135:25/" http://www.google.com --proxy-user=root --proxy-passwd=pac.itzmx.com
+开启ftp       python -m pyftpdlib -p 21
+合并文件      cp -r ./usr/* /usr/
+查看监听端口   netstat -tulpn
+16进制查看    hexdump -C filename
+vim16进制     -b filename   %!xxd   %!xxd -r
+编写二进制     echo 504b0304 | xxd -r -ps > file
+查看二进制     hexdump -e '16/1 "%02X " " | "' -e '16/1 "%_p" "\n"' filename
+音频编辑       apt-get install traverso
+vim支持python apt-get install vim-nox
+ssh上传       scp /root/qqsmail.py www.hackerl.com:/root
+             scp  -r local_dir username@servername:remote_dir
+ssh下载       scp www.hackerl.com:/root/qqsmail.py  /root
+
+cookie读取格式
+    # Netscape HTTP Cookie File
+    218.64.56.18	FALSE	/	FALSE		JSESSIONID	040E0A98BCC7547132A40C55FEF497AA
+
+文件查找:
+	find 起始目录 -name filename
+	locate filename    --  从数据库/var/lib/locatedb 中查询
+	whereis filename   --  搜索可执行文件
+	which 命令         --  查看系统命令是否存在
+	type 命令          --  查看是否为系统自带命令
+	
+Linux快捷键传递:
+    比如Wine安装的程序，全局快捷键只在wine程序有焦点时可以使用
+    安装xdotool和xbindkeys，前者负责将按键转发给指定的应用程序窗口，后者负责将按键绑定至指定的Shell命令
+    配置文件
+        xbindkeys --defaults > /root/.xbindkeysrc
+        vi ~/.xbindkeysrc
+            "xdotool key --window $(xdotool search --name '豆芽2016' | head -n1) ctrl+alt+z"
+             Control+Alt + z
+        这样就把Control+Alt + z快捷键绑定到了上面的命令，然后通过xdotool 搜索窗口，传递按键
+    

