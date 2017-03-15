@@ -34,4 +34,55 @@ Linux快捷键传递:
             "xdotool key --window $(xdotool search --name '豆芽2016' | head -n1) ctrl+alt+z"
              Control+Alt + z
         这样就把Control+Alt + z快捷键绑定到了上面的命令，然后通过xdotool 搜索窗口，传递按键
+
+    xdotool 可以搜索窗口、聚焦窗口、模拟击键、模拟鼠标点击
+
+cut命令:
+    截取字符、字节、以某某字符分隔然后提取
+    cut -b/-c 1-5,10     --  提取1-5以及第10字节或字符
+    cut -d : -f 2        --  类似于 split(':')[1]
+
+head、tail:
+	head -n 1 	-- 截取开头第1行
+	tail -n 1 	-- 截取末尾第1行
+	head -n -1  -- 截取除了第1到倒数第2行
+	tail -n +3  -- 从第3行开始
+
+
+Deb修改:
+	mkdir -p extract/DEBIAN
+	dpkg-deb -x package.deb extract/
+	dpkg-deb -e package.deb extract/DEBIAN [...do something, e.g. edit the control file...]
+	mkdir build
+	dpkg-deb -b extract/ build/
+
+zip加密
+    zip -q -r -P l3i3u3p3a3n3 zipfile.zip Xinli
     
+ps查看进程
+    ps -ef 
+
+提取音频:
+    mplayer IMG_0309.mp4 -ao pcm:file=s.mp3 -vc dummy -vo null
+
+禁用gvfsd-smb-browse
+    sudo chmod 744 /usr/lib/gvfs/gvfsd-smb-browse
+
+卸载vmware
+    sudo vmware-installer --uninstall-product vmware-workstation
+
+终端代理
+    export http_proxy=http://root:pac.itzmx.com@47.89.12.5:25
+
+axel
+    axel -H Cookie:__qca=P0-906789265-1487835243067; __utmz=191141293.1487835245.1.1.utmccn=(direct)|utmcsr=(direct)|utmcmd=(none); __utmb=191141293; __utma=191141293.886254527.1487835243.1487835243.1487835243.1;  -H Referer:http://www.dskmusic.com/dsk-dynamic-guitars/ -a -n 4 -o DSK_Dynamic_Guitars_32bits.zip http://dskmusic.vst4free.com/downloads/vsti/DSK_Dynamic_Guitars/DSK_Dynamic_Guitars_32bits.zip
+    
+服务器
+    ssh 104.128.93.123 -p 29774
+
+
+
+
+
+
+
