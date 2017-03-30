@@ -80,9 +80,14 @@ axel
 服务器
     ssh 104.128.93.123 -p 29774
 
+添加路由
+    route add -net 172.30.22.188 netmask 255.255.255.255 dev wlan0 gw 10.200.255.254     走路由器
+    route add -net 172.30.22.188 netmask 255.255.255.255 dev wlan0      局域网中
+    route add -net 172.30.22.0 netmask 255.255.255.0 dev wlan0 gw 10.200.255.254
+    添加掩码时 IP要先和掩码AND 否则报错 netmask doesn't match route address
 
+删除路由
+    route del -net 172.30.22.188 netmask 255.255.255.255 dev wlan0
 
-
-
-
-
+图片压缩
+    convert -quality 60 0001.jpg 800.jpg
