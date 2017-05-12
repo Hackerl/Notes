@@ -57,7 +57,7 @@ Deb修改:
 	dpkg-deb -b extract/ build/
 
 zip加密
-    zip -q -r -P l3i3u3p3a3n3 zipfile.zip Xinli
+    zip -q -r -P mima zipfile.zip Xinli
     
 ps查看进程
     ps -ef 
